@@ -4,7 +4,8 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import { getProducts } from "../services/product.service";
-import { getUsername } from "../services/auth.service";
+// import { getUsername } from "../services/auth.service";
+import { useLogin } from "../hooks/useLogin";
 // import Counter from "../components/Fragments/Counter";
 
 // const products = [
@@ -43,7 +44,8 @@ const ProductsPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
-  const [username, setUsername] = useState("");
+  const username = useLogin();
+
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
   }, []);
@@ -52,17 +54,6 @@ const ProductsPage = () => {
     getProducts((data) => {
       setProducts(data);
     });
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setUsername(setUsername);
-    } else {
-      window.location.href = "/login";
-    }
-
-    setUsername(getUsername(token));
   }, []);
 
   useEffect(() => {
@@ -75,6 +66,7 @@ const ProductsPage = () => {
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   }, [cart, products]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
